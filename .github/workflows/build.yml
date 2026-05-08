@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: secdrill/Fonts
+          path: fonts
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
@@ -46,12 +47,15 @@ jobs:
       - name: "Convert otf to ttf"
         run: |
           chmod +x convert.py
-          ./convert.py
+          pushd fonts
+          ls -lh ./*.otf
+          ../convert.py
+          ls -lh ./*.ttf
+          popd
 
       - name: "Package ttf files"
         run: |
-          ls -lh *.ttf
-          find . -maxdepth 1 -type f -name "*.ttf" -exec zip -j ComicCode.zip {} +
+          find fonts -maxdepth 1 -type f -name "*.ttf" -exec zip -j ComicCode.zip {} +
           ls -lh *.zip
 
       - name: "Set release variable"
