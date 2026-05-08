@@ -6,6 +6,9 @@ on:
     - cron: "0 0 1 * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,6 +17,8 @@ jobs:
   build:
     name: "Build Comic Code TTF"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: "Checkout repository"
@@ -21,14 +26,23 @@ jobs:
         with:
           repository: secdrill/Fonts
 
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: "pip"
+
       - name: "Install dependencies"
         run: |
           sudo apt-get update
-          sudo apt-get install -y fontforge python3-fonttools
+          sudo apt-get install -y fontforge
+          python3 -m pip install --upgrade pip
+          python3 -m pip install fonttools
 
       - name: "Convert otf to ttf"
         run: |
-          python3 convert.py
+          chmod +x convert.py
+          ./convert.py
 
       - name: "Package ttf files"
         run: |
@@ -42,7 +56,7 @@ jobs:
           echo "TAG_NAME=$(awk -F. '{printf("v%d.%d.%d", substr($1,3), $2, $3)}' <<<"$(date -u '+%Y.%m.%d' -d '+8 hours')")" >> "$GITHUB_ENV"
 
       - name: "Upload release"
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           files: ./*.zip
           name: ${{ env.RELEASE_NAME }}
