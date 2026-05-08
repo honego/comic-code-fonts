@@ -1,5 +1,5 @@
 ---
-name: "Build"
+name: "Build Comic Code"
 
 on:
   schedule:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   build:
+    name: "Build Comic Code"
     runs-on: ubuntu-latest
     permissions:
       contents: write
