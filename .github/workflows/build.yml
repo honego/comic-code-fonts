@@ -46,17 +46,12 @@ jobs:
 
       - name: "Convert otf to ttf"
         run: |
-          chmod +x convert.py
-          pushd fonts
-          ls -lh ./*.otf
-          ../convert.py
-          ls -lh ./*.ttf
-          popd
+          cd fonts
+          python3 ../convert.py
+          ls -l ./*.ttf
 
       - name: "Package ttf files"
-        run: |
-          find fonts -maxdepth 1 -type f -name "*.ttf" -exec zip -j ComicCode.zip {} +
-          ls -lh *.zip
+        run: find fonts -maxdepth 1 -type f -name "*.ttf" -exec zip -j ComicCode.zip {} +
 
       - name: "Set release variable"
         run: |
