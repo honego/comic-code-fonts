@@ -24,6 +24,11 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v6
         with:
+          fetch-depth: 0
+
+      - name: "Checkout repository"
+        uses: actions/checkout@v6
+        with:
           repository: secdrill/Fonts
 
       - name: "Setup Python"
