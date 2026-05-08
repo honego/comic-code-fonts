@@ -27,7 +27,7 @@ jobs:
           repository: secdrill/Fonts
 
       - name: "Setup Python"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.x"
           cache: "pip"
@@ -56,7 +56,7 @@ jobs:
           echo "TAG_NAME=$(awk -F. '{printf("v%d.%d.%d", substr($1,3), $2, $3)}' <<<"$(date -u '+%Y.%m.%d' -d '+8 hours')")" >> "$GITHUB_ENV"
 
       - name: "Upload release"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ./*.zip
           name: ${{ env.RELEASE_NAME }}
